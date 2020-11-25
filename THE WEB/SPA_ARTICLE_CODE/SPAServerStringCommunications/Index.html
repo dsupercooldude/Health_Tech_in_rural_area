@@ -1,0 +1,42 @@
+﻿
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <div>Enter name</div>
+
+    <!-- name input -->
+    <input id="nameInput" type="text" name="value" style="width:200px" />
+
+    <!-- div to display the text returning from the server -->
+    <div id="serverText" style="min-height:50px;color:red;margin-top:10px"></div>
+
+    <!-- button to trigger communication with the server -->
+    <button id="getHelloStringButton">Get Server String</button>
+</body>
+</html>
+
+<script src="Scripts/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#getHelloStringButton").click(function () { // on button click
+
+            // get name value
+            var name = nameInput.value;
+
+            // send query string to the server.
+            // /hello/gethellomessag is the relative url
+            // second argument is the query string
+            // 3rd argument is the function called on successful reply from the server
+            $.get("/hello/gethellomessage", "name=" + name, function (returnedMessage) {
+
+                // write the text coming fromt he server into 
+                // serverText element.
+                $("#serverText").text(returnedMessage);
+            });
+        });
+    });
+</script>

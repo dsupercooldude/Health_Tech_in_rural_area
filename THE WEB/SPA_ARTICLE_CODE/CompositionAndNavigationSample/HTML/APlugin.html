@@ -1,0 +1,35 @@
+﻿<div id="subTabPlugin">
+    <ul id="subTabs">
+        <!-- href='#' is needed only to help the links look like links -->
+        <li><a href="#subPage1">SUB Page1</a></li>
+        <li><a href="#subPage2">SUB Page2</a></li>
+    </ul>
+
+    
+    <!-- page 1 message colored in red -->
+    <div id="subPage1" style="color:green" >This is SUB page 1</div>
+
+    <!-- page 2 message colored in blue -->
+    <div id="subPage2" style="color:purple">This is SUB page 2</div>
+</div>
+<script src="../Scripts/jquery-1.8.3.min.js"></script>
+<script src="../Scripts/jquery-ui-1.9.2.min.js"></script>
+<script src="../Scripts/BPF/bpf.js"></script>
+<script type="text/javascript" data-type="script-interface">
+    (function () {
+        var pluginTabs;
+
+        return {
+            "postRender": function (compositionReadyEventBarrier) {
+                // create tabs within the plugin and store the
+                // tab object to be used later
+                pluginTabs = this.currentDOM.find("#subTabPlugin").tabs();
+            },
+            "connectToParentNode": function (parentNode) {
+                // create the navigation node at the plugin level and 
+                // connect it with the parent navigation node.
+                bpf.nav.addJQTabsChild(parentNode, "page1", pluginTabs);
+            }
+        };
+    })();
+</script>

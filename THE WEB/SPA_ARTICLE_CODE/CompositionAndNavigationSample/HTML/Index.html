@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link href="../Content/themes/base/jquery-ui.css" rel="stylesheet" />
+    <title></title>
+</head>
+<body>
+    <!-- links to be converted to tabs -->
+    <ul id="pageTabs">
+        <li><a href="#page1">Page1</a></li>
+        <li><a href="#page2">Page2</a></li>
+    </ul>
+    
+    <!-- page 1 message colored in red -->
+    <div id="page1" style="color:red" >
+        This is page 1
+
+        <div id="pluginContainer"></div>
+    </div>
+
+    <!-- page 2 message colored in blue -->
+    <div id="page2" style="color:blue">This is page 2</div>
+</body>
+</html>
+<script src="../Scripts/jquery-1.8.3.min.js"></script>
+<script src="../Scripts/jquery-ui-1.9.2.min.js"></script>
+<script src="../Scripts/BPF/bpf.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        // create the tabs, store a reference to the tabs.
+        var topLevelTabs = $("body").tabs();
+
+        // create the top level bpf.nav.Node object around the tabs.
+        var topLevelNode = bpf.nav.getJQTabsNode(topLevelTabs);
+
+        var compositionReady = new bpf.utils.EventBarrier();
+
+        compositionReady.addSimpleEventHandler(function () {
+            // this function is called after all the plugins are loaded (rendered)
+            
+            // we call "connectToParentNode" function on the plugin
+            // passing the topLevelNode to it, in order to connect
+            // the plugin's tabs to the bpf navigation framework.
+            bpf.control("#pluginContainer").call("connectToParentNode", topLevelNode);
+
+            // connect the navigation framework with the URL's hash
+            bpf.nav.connectToUrlHash(topLevelNode);
+
+            // update the current URL
+            bpf.nav.setKeySegmentToHash(topLevelNode);
+        });
+
+        // get the plugin
+        bpf.cmpst.getPlugin("APlugin.html", null, "#pluginContainer", compositionReady);
+    });
+</script>
+

@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <div id="cinemaInfo" style="margin-bottom:20px"></div>
+
+    <Button id="getCinemaInfoButton">Get Cinema Info</Button>
+</body>
+</html>
+<script src="Scripts/jquery-1.8.3.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#getCinemaInfoButton").click(function () { // on button click
+
+            // send query string to the server.
+            // /hello/gethellomessag is the relative url
+            // second argument an empty string since our query does not have parameters
+            // 3rd argument is the function called on successful reply from the server
+            $.get("/data/getcinema", "", function (cinema) {
+
+                // clear the info displayed from 
+                // the previous click (if any).
+                $("#cinemaInfo").contents().remove();
+
+                // add cinema information to "cinemaInfo" div element
+                $("#cinemaInfo").append("Name: " + cinema.Name);
+                $("#cinemaInfo").append("<div></div>");
+                $("#cinemaInfo").append("Description: " + cinema.Description);
+                $("#cinemaInfo").append("<div style='margin-top:5px'></div>");
+                $("#cinemaInfo").append("Movies:");
+                $("#cinemaInfo").append("<div></div>");
+                // add information about individual movies
+                for (var idx = 0; idx < cinema.Movies.length; idx++) {
+                    var movie = cinema.Movies[idx];
+
+                    $("#cinemaInfo").append
+                    (
+                        "&nbsp;&nbsp;&nbsp;&nbsp;" +
+                        "Title: " + movie.Title +
+                        ",&nbsp;&nbsp;&nbsp;&nbsp;" +
+                        "year: " + movie.Year
+                        );
+                    $("#cinemaInfo").append("<div></div>");
+                }
+            });
+        });
+    });
+</script>

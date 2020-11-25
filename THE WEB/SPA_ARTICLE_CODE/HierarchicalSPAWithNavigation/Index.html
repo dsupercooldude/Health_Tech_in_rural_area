@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <!-- reference to jquery.ui.tabs.css style file -->
+    <link href="Content/themes/base/jquery.ui.all.css" rel="stylesheet" type="text/css" />
+    <title></title>
+</head>
+<body>
+    <ul id="pageTabs">
+        <!-- href='#' is needed only to help the links look like links -->
+        <li><a href="#page1">page1</a></li>
+        <li><a href="#page2">page2</a></li>
+    </ul>
+
+
+    <!-- page 1 message colored in red -->
+    <div id="page1">
+        <div style="font-size: 40px; color: red">This is page 1</div>
+        
+        <div id="page1SubTabs">
+            <ul id="page1SubTabLinks">
+                <!-- href='#' is needed only to help the links look like links -->
+                <li><a href="#page1SubTab1">P1 Sub Page1</a></li>
+                <li><a href="#page1SubTab2">P1 Sub Page2</a></li>
+            </ul>
+            <p id="page1SubTab1" style="color:green">This is sub-tab 1 of page 1</p>
+            <p id="page1SubTab2" style="color:red">This is sub-tab 2 of page 1</p>
+        </div>
+    </div>
+
+    <!-- page 2 message colored in blue -->
+    <div id="page2" >
+        <div style="font-size: 40px; color: blue">This is page 2</div>
+        
+        <div id="page2SubTabs">
+            <ul id="page2SubTabLinks">
+                <!-- href='#' is needed only to help the links look like links -->
+                <li><a href="#page2SubTab1">P2 Sub Page1</a></li>
+                <li><a href="#page2SubTab2">P2 Sub Page2</a></li>
+            </ul>
+            <p id="page2SubTab1" style="color:blue">This is sub-tab 1 of page 2</p>
+            <p id="page2SubTab2">This is sub-tab 2 of page 2</p>
+        </div>
+    </div>
+</body>
+</html>
+<script src="Scripts/jquery-1.8.3.min.js" type="text/javascript"></script>
+<script src="Scripts/jquery-ui-1.9.2.min.js" type="text/javascript"></script>
+
+<script src="Scripts/BPF/bpf.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        // get the tabs DOM elements
+        var tabs = $("body").tabs(); // turns top level hyperlinks into tabs
+
+        var page1SubTabs = $("#page1SubTabs").tabs(); // turns page 1 hyperlinks into tabs
+
+        var page2SubTabs = $("#page2SubTabs").tabs(); // turns page 2 hyperlink into tabs
+
+        // creates the top level node (JQTabsNavAdaptor is used).
+        var topLevelNode = bpf.nav.getJQTabsNode(tabs);
+
+        // creates a child node and adds it to top level node
+        // as child of "page1".
+        bpf.nav.addJQTabsChild(topLevelNode, "page1", page1SubTabs);
+
+        // creates a child node and adds it to top level node
+        // as child of "page2".
+        bpf.nav.addJQTabsChild(topLevelNode, "page2", page2SubTabs);
+
+        // connect the navigation framework to the browser's url hash
+        bpf.nav.connectToUrlHash(topLevelNode);
+
+        // set the url to correspond to the current selection pattern
+        return bpf.nav.setKeySegmentToHash(topLevelNode);
+    });
+</script>

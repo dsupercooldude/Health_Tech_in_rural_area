@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link href="Content/themes/base/jquery-ui.css" rel="stylesheet" />
+    <title></title>
+    <style>
+        body
+        {
+            /*reduced the size of text to fit everything within the page of reasonable width*/
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <tr>
+            <td style="vertical-align: top">
+                <div id="MyTopics">
+                    <ul>
+                        <li><a href="#TopicA">TopicA</a></li>
+                        <li><a href="#TopicB">TopicB</a></li>
+                    </ul>
+
+                    <div id="TopicA">
+                        My topic A
+                        <table>
+                            <tr>
+                                <td style="vertical-align: top;">
+                                    <div id="A1Subtopics">
+                                        <ul>
+                                            <li><a href="#A1Subtopic1">A1Sub1</a></li>
+                                            <li><a href="#A1Subtopic2">A1Sub2</a></li>
+                                        </ul>
+
+                                        <div id="A1Subtopic1">
+                                            A1 Sub Topic1
+                                            <div id="A1Sub1Sub">
+                                                <ul>
+                                                    <li><a href="#A1Sub1Sub1">A1S1S1</a></li>
+                                                    <li><a href="#A1Sub1Sub2">A1S1S2</a></li>
+                                                </ul>
+                                                <div id="A1Sub1Sub1">A1 Sub1 Sub1</div>
+                                                <div id="A1Sub1Sub2">A1 Sub1 Sub2</div>
+                                            </div>
+                                        </div>
+                                        <div id="A1Subtopic2">A1 Sub Topic2</div>
+                                    </div>
+                                </td>
+                                <td style="vertical-align: top;">
+                                    <div id="A2Subtopics">
+                                        <ul>
+                                            <li><a href="#A2Subtopic1">A2Sub1</a></li>
+                                            <li><a href="#A2Subtopic2">A2Sub2</a></li>
+                                        </ul>
+
+                                        <div id="A2Subtopic1">A2 Sub Topic1</div>
+                                        <div id="A2Subtopic2">A2 Sub Topic2</div>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="TopicB">
+                        The Topic B
+                    </div>
+                </div>
+            </td>
+            <td style="vertical-align: top">
+                <div id="SomeOtherTopics">
+                    <ul>
+                        <li><a href="#SomeOtherTopicA">AnotherA</a></li>
+                        <li><a href="#SomeOtherTopicB">AnotherB</a></li>
+                    </ul>
+                    <div id="SomeOtherTopicA">Some Other A </div>
+                    <div id="SomeOtherTopicB" style="background-color: pink">Some Other B</div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
+<script src="Scripts/jquery-1.8.3.min.js"></script>
+<script src="Scripts/jquery-ui-1.9.2.min.js"></script>
+<script src="Scripts/BPF/bpf.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // create topics JQuery UI tabs
+        var topics = $("#MyTopics").tabs();
+
+        // create otherTopics tabs
+        var otherTopics = $("#SomeOtherTopics").tabs();
+
+        var A1Subtopics = $("#A1Subtopics").tabs();
+
+        var A2Subtopics = $("#A2Subtopics").tabs();
+
+        var A1Sub1Sub = $("#A1Sub1Sub").tabs();
+
+        // top level node is a product node for
+        // the Cartesian product of the states
+        var topLevelNode = new bpf.nav.ProductNode();
+
+        // add "topics" node to be a child of topLevelNode under key "topics"
+        var topicsNode = bpf.nav.addJQTabsChild(topLevelNode, "topics", topics);
+
+        // add "otherTopics" node to be a child of topLevelNode under key "othertopics"
+        bpf.nav.addJQTabsChild(topLevelNode, "othertopics", otherTopics);
+
+        var aSubtopicsProductNode = new bpf.nav.ProductNode();
+
+        topicsNode.addChildNode("TopicA", aSubtopicsProductNode);
+
+        var A1SubNode = bpf.nav.addJQTabsChild(aSubtopicsProductNode, "a1subs1", A1Subtopics);
+        bpf.nav.addJQTabsChild(aSubtopicsProductNode, "a1subs2", A2Subtopics);
+
+        bpf.nav.addJQTabsChild(A1SubNode, "A1Subtopic1", A1Sub1Sub);
+
+        // create the one to one relationship between the states and the URL
+        bpf.nav.connectToUrlHash(topLevelNode);
+
+        // change the original URL to be based on the navigation states
+        bpf.nav.setKeySegmentToHash(topLevelNode);
+    });
+</script>

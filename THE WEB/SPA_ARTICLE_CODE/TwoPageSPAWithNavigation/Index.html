@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <!-- reference to jquery.ui.tabs.css style file -->
+    <link href="Content/themes/base/jquery.ui.all.css" rel="stylesheet" type="text/css" />
+    <title></title>
+</head>
+<body>
+    <ul id="pageTabs">
+        <li><a href="#page1">choose page1</a></li>
+        <li><a href="#page2">choose page2</a></li>
+    </ul>
+    
+    <!-- page 1 message colored in red -->
+    <p id="page1" style="font-size:40px;color:red" >This is page 1</p>
+
+    <!-- page 2 message colored in blue -->
+    <p id="page2" style="font-size:40px;color:blue">This is page 2</p>
+</body>
+</html>
+<script src="Scripts/jquery-1.8.3.min.js" type="text/javascript"></script>
+<script src="Scripts/jquery-ui-1.9.2.min.js" type="text/javascript"></script>
+
+<script src="Scripts/BPF/bpf.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        // get the tabs DOM elements
+        var tabs = $("body").tabs(); // turns the hyperlinks into tabs
+
+        // JQTabsNavAdaptor is a special constructro that adapts
+        // the JQuery tabs to become usable by the navigation framework
+        var tabsAdaptor = new bpf.nav.JQTabsNavAdaptor(tabs);
+
+        // create the navigation framework node
+        var tabNode = new bpf.nav.Node(tabsAdaptor);
+
+        // connect the navigation framework node to the browser's url hash
+        bpf.nav.connectToUrlHash(tabNode);
+
+        // set the url to correspond to the selected tab
+        return bpf.nav.setKeySegmentToHash(tabNode);
+    });
+</script>

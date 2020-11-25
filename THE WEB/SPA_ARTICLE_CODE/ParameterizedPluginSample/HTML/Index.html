@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <div style="font-size:30px;color:red">This is the main Module</div>
+    <img id="busyIndicator" src="../Images/busy_indicator.gif" style="vertical-align:central;margin-left:50%" />
+
+    <!-- plugin will get into this div below -->
+    <div id="APluginContainer1" style="margin-top:10px"></div>
+
+    <!-- plugin will get into this div below -->
+    <div id="APluginContainer2" style="margin-top:10px"></div>
+</body>
+</html>
+<script src="../Scripts/jquery-1.8.3.min.js"></script>
+<script src="../Scripts/BPF/bpf.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        // this event will fire after all the plugins and their
+        // descendent plugins are loaded
+        var compositionReady = new bpf.utils.EventBarrier();
+
+        // the composition ready event fires after everything all the plugins
+        // and their descendents have been loaded into the main module.
+        compositionReady.addSimpleEventHandler(function (success) {
+            $("#busyIndicator").hide();
+        });
+
+        // gets the plugin from file APlugin.html and inserts it into the 
+        // element pointed to by the selector "#APluginContainer1"
+        bpf.cmpst.getPlugin(
+            "APlugin.html",
+            null,
+            "#APluginContainer1",
+            compositionReady,
+            {
+                fontSize: "50px",
+                color: "blue"
+            }
+        );
+
+        // gets the plugin from file APlugin.html and inserts it into the 
+        // element pointed to by the selector "#APluginContainer2"
+        bpf.cmpst.getPlugin(
+            "APlugin.html",
+            null,
+            "#APluginContainer2",
+            compositionReady,
+            {                      // pass the object containing postRenderArguments
+                fontSize: "20px", 
+                color: "green"
+            }
+        );
+    });
+</script>

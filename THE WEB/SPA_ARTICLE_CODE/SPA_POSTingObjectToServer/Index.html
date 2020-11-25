@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <!-- Here we place the original cinema data-->
+    <div id="originalCinemaInfo" style="margin-bottom:20px"></div>
+
+    <!-- clicking this button sends the cinema object to the server
+         and places the result returning from the server under 
+         serverCinemaInfo tag -->
+    <Button id="changeCinemaInfoFromServerButton">Change Cinema Info via Server</Button>
+
+    <div style="color:blue;margin-top:20px">Reply from the Server:</div>
+
+    <!-- here we create a visual representation for Cinema object 
+         coming from the server -->
+    <div id="serverCinemaInfo" style="margin-bottom:20px;color:Red">
+        
+    </div>
+</body>
+</html>
+<script src="Scripts/jquery-1.8.3.min.js" type="text/javascript"></script>
+<script src="Scripts/json2.min.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+    // a utility function that builds visual representation for
+    // a cinema object and appends it to jqueryObjectToAppendInfoTo
+    // DOM element
+    var displayCinemaInfo = function(jqueryObjectToAppendInfoTo, cinema) {
+        // clear the info displayed from 
+        // the previous click (if any).
+        jqueryObjectToAppendInfoTo.contents().remove();
+
+        // add cinema information to "cinemaInfo" div element
+        jqueryObjectToAppendInfoTo.append("Name: " + cinema.Name);
+        jqueryObjectToAppendInfoTo.append("<div></div>");
+        jqueryObjectToAppendInfoTo.append("Description: " + cinema.Description);
+        jqueryObjectToAppendInfoTo.append("<div style='margin-top:5px'></div>");
+        jqueryObjectToAppendInfoTo.append("Movies:");
+        jqueryObjectToAppendInfoTo.append("<div></div>");
+        // add information about individual movies
+        for (var idx = 0; idx < cinema.Movies.length; idx++) {
+            var movie = cinema.Movies[idx];
+
+            jqueryObjectToAppendInfoTo.append
+                    (
+                        "&nbsp;&nbsp;&nbsp;&nbsp;" +
+                        "Title: " + movie.Title +
+                        ",&nbsp;&nbsp;&nbsp;&nbsp;" +
+                        "year: " + movie.Year
+                        );
+            jqueryObjectToAppendInfoTo.append("<div></div>");
+        }
+    };
+
+    $(document).ready(function () {
+
+        // we create a Cinema object on the client
+        var cinema = {
+            Name: "Mohawk Mall Cinema",
+            Description: "An OK Cinema",
+
+            Movies: [
+                {
+                    Title: "Anne of Green Gables",
+                    Year: 1985
+                },
+                {
+                    Title: "Anne of Avonlea",
+                    Year: 1987
+                }
+            ]
+        };
+
+        // display the visual representation of the original 
+        // cinema object
+        displayCinemaInfo($("#originalCinemaInfo"), cinema);
+
+        var cinemaJsonString = JSON.stringify(cinema);
+
+        $("#changeCinemaInfoFromServerButton").click(function () {
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8;",
+                url: "/data/changecinemadata",
+                data: cinemaJsonString,
+                success: function (changedCinemaFromServer) {
+
+                    // display the visual representation of the server modified 
+                    // cinema object
+                    displayCinemaInfo($("#serverCinemaInfo"), changedCinemaFromServer);
+                },
+                error: function (resultFromServer) {
+
+                    // clear the previous contet of serverCinemaInfo element
+                    $("#serverCinemaInfo").contents().remove();
+
+                    // display the error message
+                    $("#serverCinemaInfo").append("Server Error");
+                }
+            });
+        });
+
+    });
+</script>

@@ -1,0 +1,19 @@
+﻿<div id="aPlugin">
+    This is a plugin
+</div>
+
+<!--script tag should be marked by data-type="script-interface" in
+    order for it to be recognized as containing the plugin's 'code-behind' -->
+<script type="text/javascript" data-type="script-interface">
+    (function () {
+        return {
+            "postRender": function (compositionReadyEventBarrier) {
+                var fontSize = this.postRenderArguments.fontSize; // get font size from the arguments
+                var color = this.postRenderArguments.color; // get color from the arguments
+
+                this.currentDOM.find("#aPlugin").css("font-size", fontSize);
+                this.currentDOM.find("#aPlugin").css("color", color);
+            }
+        };
+    })();
+</script>

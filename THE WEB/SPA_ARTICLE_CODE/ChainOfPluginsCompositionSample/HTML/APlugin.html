@@ -1,0 +1,46 @@
+﻿<div id="aPlugin" style="font-size:25px">
+    This is a plugin
+
+    <div id="subPluginContainer"></div>
+
+    <Button id="changePluginColorButton">Change Plugin Color to Blue</Button>
+    <Button id="changeSubPluginColorButton">Change SUB Plugin Color to Black</Button>
+</div>
+<script src="../Scripts/jquery-1.8.3.js"></script>
+<script src="../Scripts/BPF/bpf.js"></script>
+<script type="text/javascript" data-type="script-interface">
+    (function () {
+        return {
+            "postRender": function (compositionReadyEventBarrier) {
+                var self = this;
+
+                // change color to green
+                self.currentDOM.find("#aPlugin").css("color", "green");
+
+                // create a child event barrier - it will fire
+                // once the sub-plugin and all of its
+                // descendents are loaded.
+                // And the parent event barrier won't fire until it fires.
+                var subCompositionReady = 
+                    compositionReadyEventBarrier.createChildEventBarrier();
+
+                subCompositionReady.addSimpleEventHandler(function () {
+                    // changes the color of the plugin itself to blue.
+                    $("#changePluginColorButton").click(function () {
+                        self.currentDOM.find("#aPlugin").css("color", "blue");
+                    });
+
+                    // on changeSubPluginColorButton click call the sub-plugin's
+                    // method changeColorToBlack
+                    $("#changeSubPluginColorButton").click(function () {
+                        bpf.control("#subPluginContainer", self).call("changeColorToBlack");
+                    });
+                });
+
+                // get sub-plugin note that you need to pass 'this' object
+                // as the second argument to getPlugin function
+                bpf.cmpst.getPlugin("ASubPlugin.html", self, "#subPluginContainer", subCompositionReady);
+            }
+        };
+    })();
+</script>

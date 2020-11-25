@@ -1,0 +1,17 @@
+﻿<div id="aSubPlugin" style="font-size:18px;color:purple">
+    This is a SUB plugin
+
+    <div id="subPluginContainer"></div>
+</div>
+<script type="text/javascript" data-type="script-interface">
+    (function () {
+        // code-behind object for sub-plugin - contains a function
+        // to change the text color to black
+        return {
+            "changeColorToBlack": function () {
+                // change the color to black
+                this.currentDOM.find("#aSubPlugin").css("color", "black");
+            }
+        };
+    })();
+</script>

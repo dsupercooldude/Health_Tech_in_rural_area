@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link href="../Content/themes/base/jquery.ui.all.css" rel="stylesheet" />
+    <title></title>
+</head>
+<body>
+    <div data-bind="foreach:studentVM.students">
+        <a data-bind="attr:{href:name}, text:name, click:$parent.selectStudent" style="margin-right: 20px"></a>
+    </div>
+
+    <div id="SelectedStudentCourses" data-bind="with:studentVM.selectedStudent" style="margin-top: 50px">
+        <div data-bind="foreach:courses">
+            <a data-bind="attr:{href:courseName}, text:courseName, click:$parent.selectCourse" style="margin-right: 70px"></a>
+        </div>
+    </div>
+
+    <div id="selectedCourse" data-bind="if:studentVM.hasSelectedCourse" style="margin-top: 50px">
+        <div>
+            <span style="margin-left: 20px">Student: </span>
+            <span style="color:red" data-bind="text:studentVM.selectedStudent().name"></span>
+            <span style="margin-left: 20px">Selected Course: </span>
+            <span data-bind="text:studentVM.selectedStudent().selectedCourse().courseName" style="color:red"></span>
+            <span style="margin-left: 20px">Grade: </span>
+            <span data-bind="text:studentVM.selectedStudent().selectedCourse().grade" style="color:red"></span>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="../Scripts/underscore.js"></script>
+<script src="../Scripts/jquery-1.8.2.min.js"></script>
+<script src="../Scripts/jquery-ui-1.9.0.min.js"></script>
+<script src="../Scripts/knockout-2.1.0.debug.js"></script>
+
+<script src="../Scripts/BPF/bpf.js"></script>
+
+<script src="../Scripts/ViewModels/StudentViewModel.js"></script>
+
+<script>
+    $(function () {
+        ko.applyBindings(studentVM);
+
+        // we create the adaptor for the selected student observable
+        var studentLevelObservableAdaptor =
+            new bpf.nav.KoObservableNavAdaptor
+            (
+                studentVM.selectedStudent,
+
+                // key to student function
+                function (key) {
+                    var foundStudent = _.chain(studentVM.students).filter(function (student) {
+                        return student.name === key;
+                    }).first().value();
+
+                    return foundStudent;
+                },
+
+                // student to key function
+                function (student) {
+                    return student.name;
+                }
+            );
+
+        var topLevelNode = new bpf.nav.FactoryNode(
+            studentLevelObservableAdaptor,
+            null,
+
+            // child node producing function
+            function (key, data) {
+
+                var childObj = data.getChildObjectByKey(key);
+
+                if (!childObj)
+                    return;
+
+                // create adapted child object
+                var adaptedChildObj =
+                    new bpf.nav.KoObservableNavAdaptor
+                    (
+                        childObj.selectedCourse,
+                        function (courseKey) {
+                            return _.chain(childObj.courses).
+                                filter(function (universityCourse) {
+                                    return universityCourse.courseName === courseKey;
+                                }).first().value();
+                        },
+                        function (course) {
+                            return course.courseName;
+                        }
+                    );
+
+                // create the node
+                return new bpf.nav.Node(
+                    adaptedChildObj
+                );
+            }
+        );
+
+        bpf.nav.connectToUrlHash(topLevelNode);
+
+        bpf.nav.setKeySegmentToHash(topLevelNode);
+    });
+</script>

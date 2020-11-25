@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    
+    <h3>AWebPros Logo:</h3>
+    <div id="AWebProsLogo" >
+    </div>
+
+    <h3 style="margin-top:30px">Running Letters Demo:</h3>
+    <div id="RunningLettersDemo" >
+    </div>
+</body>
+</html>
+<script src="../Scripts/jquery-1.8.3.min.js"></script>
+<script src="../Scripts/Silverlight.js"></script>
+<script src="../Scripts/BPF/bpf.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        if (Silverlight.isInstalled("2.0")) {
+            var compositionReady = new bpf.utils.EventBarrier();
+
+            bpf.cmpst.getPlugin(
+                "SilverlightContainerPlugin.html",
+                this,
+                "#AWebProsLogo",
+                compositionReady,
+                {   // post-render args
+                    marginTop: "auto",
+                    marginBottom: "auto",
+                    width: "150px",
+                    height: "150px"
+                },
+                {   // pre-render args
+                    slAppUrl: "../ClientBin/AnimatedBanner.xap"
+                }
+            );
+
+            bpf.cmpst.getPlugin(
+                "SilverlightContainerPlugin.html",
+                this,
+                "#RunningLettersDemo",
+                compositionReady,
+                {   // post-render args
+                    marginTop: "auto",
+                    marginBottom: "auto",
+                    width: "770px",
+                    height: "250px"
+                },
+                {   // pre-render args
+                    slAppUrl: "../ClientBin/RunningLetters.xap"
+                }
+            );
+        }
+    });
+</script>

@@ -1,0 +1,37 @@
+﻿<div id="aPlugin" style="font-size:25px;">
+    This is a plugin
+</div>
+
+<!--script tag should be marked by data-type="script-interface" in
+    order for it to be recognized as containing the plugin's 'code-behind' -->
+<script type="text/javascript" data-type="script-interface">
+    (function () {
+        // this function returns the plugin's 'code-behind' - 
+        // a JSON object consisting the functions. Two function names are 
+        // reserved "preRender" and "postRender" - the first executes 
+        // before the plugin is inserted into the parent module's DOM
+        // the second executes after the plugin is inserted into the parent's
+        // module dome. 
+        // other functions can be called at any later stage - at the developer's will
+        // 'this' object for every function except for preRender contains the parameters
+        // of the element into which this plugin attached. The most important parameter is
+        // currentDOM - the DOM of the parent element.
+        // All the JQuery selectors acting within the plugin should start with
+        // this.currentDOM.find(... to make sure that we are only modifying our instance
+        // of the plugin and not some other instances.
+        // The other important field within "this" object is "codeBehind". It gives
+        // access to the code behind function returned below.
+        // Note that all the function names should be in quotes in order for eval method
+        // to work at the moment when the plugin is inserted into the plugin cache.
+        return {
+            "postRender": function (compositionReadyEventBarrier) {
+                // change color to blue
+                this.currentDOM.find("#aPlugin").css("color", "green");
+            },
+            "changeColorToBlue": function () {
+                // change the color to blue
+                this.currentDOM.find("#aPlugin").css("color", "blue");
+            }
+        };
+    })();
+</script>
